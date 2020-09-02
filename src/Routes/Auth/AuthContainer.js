@@ -17,11 +17,9 @@ export default () => {
   const lastName = useInput("");
   const secret = useInput("");
   const email = useInput("");
-
   const [requestSecretMutation] = useMutation(LOG_IN, {
     variables: { email: email.value },
   });
-
   const [createAccountMutation] = useMutation(CREATE_ACCOUNT, {
     variables: {
       email: email.value,
@@ -30,14 +28,12 @@ export default () => {
       lastName: lastName.value,
     },
   });
-
   const [confirmSecretMutation] = useMutation(CONFIRM_SECRET, {
     variables: {
       email: email.value,
       secret: secret.value,
     },
   });
-
   const [localLogInMutation] = useMutation(LOCAL_LOG_IN);
 
   const onSubmit = async (e) => {
@@ -49,7 +45,7 @@ export default () => {
             data: { requestSecret },
           } = await requestSecretMutation();
           if (!requestSecret) {
-            toast.error("님 계정없음 만드셈");
+            toast.error("You dont have an account yet, create one");
             setTimeout(() => setAction("signUp"), 3000);
           } else {
             toast.success("Check your inbox for your login secret");
@@ -82,7 +78,7 @@ export default () => {
           toast.error(e.message);
         }
       } else {
-        toast.error("모든항목은 작성되어야함");
+        toast.error("All field are required");
       }
     } else if (action === "confirm") {
       if (secret.value !== "") {
@@ -96,7 +92,7 @@ export default () => {
             throw Error();
           }
         } catch {
-          toast.error("Can't confirm secret, check again");
+          toast.error("Cant confirm secret,check again");
         }
       }
     }

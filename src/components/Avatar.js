@@ -12,15 +12,15 @@ const getSize = (size) => {
     number = 150;
   }
   return `
-    width:${number}px;
-    height:${number}px;
-    `;
+        width:${number}px;
+        height:${number}px;
+        `;
 };
 
 const Container = styled.div`
   ${(props) => getSize(props.size)}
   background-image:url(${(props) => props.url});
-  backgrounf-size: cover;
+  background-size: cover;
   border-radius: 50%;
 `;
 

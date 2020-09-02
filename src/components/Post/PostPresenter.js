@@ -7,10 +7,10 @@ import { HeartFull, HeartEmpty, Comment as CommentIcon } from "../Icons";
 
 const Post = styled.div`
   ${(props) => props.theme.whiteBox};
-  width: 100%
+  width: 100%;
   max-width: 600px;
-  margin-bottom: 25px;
   user-select: none;
+  margin-bottom: 25px;
 `;
 
 const Header = styled.header`
@@ -41,7 +41,7 @@ const Files = styled.div`
 const File = styled.div`
   max-width: 100%;
   width: 100%;
-  height: 100%;
+  height: 600px;
   position: absolute;
   top: 0;
   background-image: url(${(props) => props.src});
@@ -112,6 +112,7 @@ export default ({
   toggleLike,
   onKeyPress,
   comments,
+  selfComments,
 }) => (
   <Post>
     <Header>
@@ -145,14 +146,20 @@ export default ({
               {comment.text}
             </Comment>
           ))}
+          {selfComments.map((comment) => (
+            <Comment key={comment.id}>
+              <FatText text={comment.user.username} />
+              {comment.text}
+            </Comment>
+          ))}
         </Comments>
       )}
       <Timestamp>{createdAt}</Timestamp>
       <Textarea
+        onKeyPress={onKeyPress}
         placeholder={"Add a comment..."}
         value={newComment.value}
         onChange={newComment.onChange}
-        onKeyPress={onKeyPress}
       />
     </Meta>
   </Post>

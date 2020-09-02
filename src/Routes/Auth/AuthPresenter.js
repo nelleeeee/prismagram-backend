@@ -1,5 +1,5 @@
 import React from "react";
-import { Helmet } from "react-helmet";
+import { Helmet } from "rl-react-helmet";
 import styled from "styled-components";
 import Input from "../../Components/Input";
 import Button from "../../Components/Button";
@@ -15,7 +15,6 @@ const Wrapper = styled.div`
 const Box = styled.div`
   ${(props) => props.theme.whiteBox}
   border-radius:0px;
-  width: 350px;
   width: 100%;
   max-width: 350px;
 `;
@@ -29,6 +28,7 @@ const Link = styled.span`
   color: ${(props) => props.theme.blueColor};
   cursor: pointer;
 `;
+
 const Form = styled(Box)`
   padding: 40px;
   padding-bottom: 30px;
@@ -62,7 +62,7 @@ export default ({
       {action === "logIn" && (
         <>
           <Helmet>
-            <title>Log In | Prismagram </title>
+            <title>Log In | Prismagram</title>
           </Helmet>
           <form onSubmit={onSubmit}>
             <Input placeholder={"Email"} {...email} type="email" />
@@ -96,6 +96,7 @@ export default ({
         </>
       )}
     </Form>
+
     {action !== "confirm" && (
       <StateChanger>
         {action === "logIn" ? (

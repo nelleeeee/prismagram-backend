@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { useMutation } from "@apollo/react-hooks";
-import { TOGGLE_LIKE, ADD_COMMENT } from "./PostQueries";
 import useInput from "../../Hooks/useInput";
 import PostPresenter from "./PostPresenter";
+import { useMutation } from "@apollo/react-hooks";
+import { TOGGLE_LIKE, ADD_COMMENT } from "./PostQueries";
+import { toast } from "react-toastify";
 
 const PostContainer = ({
   id,
@@ -19,14 +20,14 @@ const PostContainer = ({
   const [isLikedS, setIsLiked] = useState(isLiked);
   const [likeCountS, setLikeCount] = useState(likeCount);
   const [currentItem, setCurrentItem] = useState(0);
+  const [selfComments, setSelfComments] = useState([]);
   const comment = useInput("");
   const [toggleLikeMutation] = useMutation(TOGGLE_LIKE, {
     variables: { postId: id },
   });
-  const addCommentMutation = useMutation(ADD_COMMENT, {
+  const [addCommentMutation] = useMutation(ADD_COMMENT, {
     variables: { postId: id, text: comment.value },
   });
-
   const slide = () => {
     const totalFiles = files.length;
     if (currentItem === totalFiles - 1) {
@@ -50,36 +51,44 @@ const PostContainer = ({
     }
   };
 
-  const onKeyPress = (e) => {
-    const { keyCode } = e;
-    if (keyCode === 13) {
-      comment.setValue("");
-      // addCommentMutation();
+  const onKeyPress = async (event) => {
+    const { which } = event;
+    if (which === 13) {
+      event.preventDefault();
+      try {
+        const {
+          data: { addComment },
+        } = await addCommentMutation();
+        setSelfComments([...selfComments, addComment]);
+        comment.setValue("");
+      } catch (e) {
+        toast.error(e);
+      }
     }
-    return;
   };
 
   return (
     <PostPresenter
       user={user}
       files={files}
-      likeCount={likeCount}
+      likeCount={likeCountS}
       location={location}
       caption={caption}
-      isLiked={isLiked}
+      isLiked={isLikedS}
       comments={comments}
       createdAt={createdAt}
-      newComment={Comment}
+      newComment={comment}
       setIsLiked={setIsLiked}
       setLikeCount={setLikeCount}
       currentItem={currentItem}
       toggleLike={toggleLike}
       onKeyPress={onKeyPress}
+      selfComments={selfComments}
     />
   );
 };
 
-PostContainer.prototypes = {
+PostContainer.propTypes = {
   id: PropTypes.string.isRequired,
   user: PropTypes.shape({
     id: PropTypes.string.isRequired,
@@ -106,7 +115,7 @@ PostContainer.prototypes = {
   ).isRequired,
   caption: PropTypes.string.isRequired,
   location: PropTypes.string,
-  createAt: PropTypes.string,
+  createdAt: PropTypes.string.isRequired,
 };
 
 export default PostContainer;
