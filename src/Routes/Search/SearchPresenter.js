@@ -7,7 +7,7 @@ import UserCard from "../../Components/UserCard";
 import SquarePost from "../../Components/SquarePost";
 
 const Wrapper = styled.div`
-  height: 50vh;
+  height: 65vh;
 `;
 
 const Section = styled.div`
@@ -63,6 +63,7 @@ const SearchPresenter = ({ searchTerm, loading, data }) => {
           ) : (
             data.searchPost.map((post) => (
               <SquarePost
+                key={post.id}
                 likeCount={post.likeCount}
                 commentCount={post.commentCount}
                 file={post.files[0]}
@@ -78,7 +79,6 @@ const SearchPresenter = ({ searchTerm, loading, data }) => {
 SearchPresenter.propTypes = {
   searchTerm: PropTypes.string,
   loading: PropTypes.bool,
-  file: PropTypes.string.isRequired,
 };
 
 export default SearchPresenter;
